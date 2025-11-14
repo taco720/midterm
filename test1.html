@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 Dream Space</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #2d1b4e 100%);
+    color: white;
+    min-height: 100vh;
+  }
+
+  /* Navigation */
+  nav {
+    background: rgba(26, 26, 62, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 2px solid #bb86fc;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #bb86fc;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+  }
+
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 500;
+  }
+
+  .nav-links a:hover {
+    color: #bb86fc;
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  /* Page Sections */
+  .page-section {
+    display: none;
+  }
+
+  .page-section.active {
+    display: block;
+  }
+
+  /* Hero Section */
+  .hero {
+    text-align: center;
+    padding: 80px 20px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #bb86fc, #03dac6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 20px;
+    color: #b0b0b0;
+    margin-bottom: 40px;
+  }
+
+  /* Canvas Section on Home */
+  .canvas-section {
+    margin-top: 60px;
+    text-align: center;
+  }
+
+  .canvas-section h2 {
+    color: #bb86fc;
+    margin-bottom: 20px;
+    font-size: 32px;
+  }
+
+  canvas {
+    display: block;
+    margin: 30px auto;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(187, 134, 252, 0.3);
+    max-width: 100%;
+  }
+
+  /* About Page Layout with Sidebar */
+  .about-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+  }
+
+  .about-sidebar {
+    width: 260px;
+    background: rgba(26, 26, 62, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 40px 20px;
+    border-radius: 15px;
+    position: sticky;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #bb86fc;
+  }
+
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 3px solid #bb86fc;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.3s ease;
+  }
+
+  .profile-avatar .avatar-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .profile-avatar:hover .avatar-default {
+    opacity: 0;
+  }
+
+  .profile-avatar:hover .avatar-hover {
+    opacity: 1;
+  }
+
+  .profile-name {
+    font-size: 28px;
+    font-weight: bold;
+    color: #bb86fc;
+    margin-bottom: 10px;
+  }
+
+  .profile-quote {
+    text-align: center;
+    color: #b0b0b0;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .profile-subtitle {
+    font-style: italic;
+    color: #03dac6;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .social-links a {
+    color: #bb86fc;
+    font-size: 24px;
+    transition: transform 0.3s;
+  }
+
+  .social-links a:hover {
+    transform: scale(1.2);
+  }
+
+  .about-main {
+    flex: 1;
+  }
+
+  /* About Section */
+  .about-content {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+
+  .about-content h3 {
+    color: #bb86fc;
+    margin-bottom: 15px;
+    font-size: 24px;
+  }
+
+  .about-content p {
+    line-height: 1.8;
+    color: #d0d0d0;
+    font-size: 16px;
+  }
+
+  /* Highlight styles */
+  .highlight-yellow {
+    background-color: #ffeb3b;
+    color: #000;
+    padding: 2px 4px;
+    font-weight: 500;
+  }
+
+  .highlight-blue {
+    background-color: #64b5f6;
+    color: #000;
+    padding: 2px 4px;
+    font-weight: 500;
+  }
+
+  .highlight-green {
+    background-color: #81c784;
+    color: #000;
+    padding: 2px 4px;
+    font-weight: 500;
+  }
+
+  .underline-text {
+    text-decoration: underline;
+    text-decoration-color: #bb86fc;
+    text-underline-offset: 3px;
+  }
+
+  /* Gallery Carousel */
+  .gallery-carousel {
+    max-width: 800px;
+    margin: 40px auto;
+    position: relative;
+  }
+
+  .carousel-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .carousel-slide {
+    display: none;
+    animation: fadeIn 0.5s;
+  }
+
+  .carousel-slide.active {
+    display: block;
+  }
+
+  .carousel-slide img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 30px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .carousel-slide:hover .carousel-caption {
+    opacity: 1;
+  }
+
+  .carousel-caption h3 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #bb86fc;
+  }
+
+  .carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(187, 134, 252, 0.8);
+    color: white;
+    border: none;
+    padding: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    z-index: 10;
+  }
+
+  .carousel-button:hover {
+    background: rgba(187, 134, 252, 1);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .carousel-button.prev {
+    left: 20px;
+  }
+
+  .carousel-button.next {
+    right: 20px;
+  }
+
+  .carousel-indicators {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(187, 134, 252, 0.3);
+    margin: 0 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .indicator.active {
+    background: #bb86fc;
+    width: 30px;
+    border-radius: 6px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* Showcase */
+  .showcase-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+  }
+
+  .showcase-section h2 {
+    color: #bb86fc;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 300px;
+    border-collapse: separate;
+    border-spacing: 5px;
+    margin: 20px auto;
+    transition: all 0.3s;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    background: #f5f5f5;
+    color: #333;
+    border-radius: 5px;
+  }
+
+  th {
+    background: #bb86fc;
+    color: white;
+    font-weight: bold;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 30px 0;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 250px;
+  }
+
+  .control-group label {
+    font-size: 16px;
+    color: #bb86fc;
+    font-weight: bold;
+  }
+
+  .tab-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    padding: 10px 20px;
+    border: 2px solid #bb86fc;
+    background: transparent;
+    color: #bb86fc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+  }
+
+  .tab-button:hover {
+    background: rgba(187, 134, 252, 0.2);
+    transform: translateY(-2px);
+  }
+
+  .tab-button.active {
+    background: #bb86fc;
+    color: white;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+    background: #bb86fc;
+    color: white;
+  }
+
+  button:hover {
+    background: #9965f4;
+    transform: translateY(-2px);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    margin-top: 60px;
+    color: #b0b0b0;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .about-layout {
+      flex-direction: column;
+    }
+
+    .about-sidebar {
+      width: 100%;
+      position: relative;
+      top: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-container">
+    <div class="logo">🌌 Dream Space</div>
+    <ul class="nav-links">
+      <li><a href="#" onclick="showPage('home')">Home</a></li>
+      <li><a href="#" onclick="showPage('about')">About</a></li>
+      <li><a href="#" onclick="showPage('gallery')">Gallery</a></li>
+      <li><a href="#" onclick="showPage('showcase')">Showcase</a></li>
+      <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- Home Page -->
+  <div id="home" class="page-section active">
+    <div class="hero">
+      <h1>Welcome to My Dream Space</h1>
+    </div>
+
+    <div class="canvas-section">
+      <h2>🎨 Moonlight Galaxy</h2>
+      <canvas id="spaceCanvas" width="800" height="400"></canvas>
+    </div>
+  </div>
+
+  <!-- About Page -->
+  <div id="about" class="page-section">
+    <div class="about-layout">
+      <!-- Sidebar with Avatar -->
+      <div class="about-sidebar">
+        <div class="profile-avatar">
+          <img class="avatar-default" src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300" alt="Profile">
+          <img class="avatar-hover" src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=300" alt="Profile Hover">
+        </div>
+        <div class="profile-name">Mike</div>
+        <div class="profile-quote">
+          Cross the bridge when<br>you come to it
+        </div>
+        <div class="profile-subtitle">Universe, Earth, On Grass</div>
+        <div class="social-links">
+          <a href="#" title="Email">📧</a>
+          <a href="#" title="GitHub">💻</a>
+          <a href="#" title="YouTube">📺</a>
+          <a href="#" title="Website">🌐</a>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="about-main">
+        <div class="about-content">
+          <h3>About Me</h3>
+          <p>I am a student from <span class="highlight-yellow">NTUT</span>, learning through various <span class="underline-text">computer science courses</span> to <span class="highlight-blue">enhance my knowledge</span> and skills in technology.</p>
+        </div>
+
+        <div class="about-content">
+          <h3>My Hobbies</h3>
+          <p>I enjoy <span class="underline-text">exploring new technologies</span> and <span class="highlight-green">observing the starry sky</span>. These hobbies inspire me to keep learning and dreaming big.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery Page -->
+  <div id="gallery" class="page-section">
+    <h1 style="text-align: center; color: #bb86fc; margin-bottom: 40px;">Cosmic Gallery</h1>
+
+    <div class="gallery-carousel">
+      <div class="carousel-container">
+        <div class="carousel-slide active">
+          <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800" alt="Nebula">
+          <div class="carousel-caption">
+            <h3>Nebula</h3>
+            <p>Cosmic clouds of gas and dust where stars are born</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800" alt="Galaxy">
+          <div class="carousel-caption">
+            <h3>Hidden Galaxy</h3>
+            <p>A cosmic wonder waiting to be discovered in the vast universe</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=800" alt="Star Cluster">
+          <div class="carousel-caption">
+            <h3>Star Cluster</h3>
+            <p>Thousands of stars bound together by gravity</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800" alt="Supernova">
+          <div class="carousel-caption">
+            <h3>Supernova Explosion</h3>
+            <p>The spectacular birth and death of stars</p>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img src="https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800" alt="Cosmic Dust">
+          <div class="carousel-caption">
+            <h3>Cosmic Dust</h3>
+            <p>The building blocks of planets and celestial bodies</p>
+          </div>
+        </div>
+
+        <button class="carousel-button prev" onclick="changeSlide(-1)">‹</button>
+        <button class="carousel-button next" onclick="changeSlide(1)">›</button>
+      </div>
+
+      <div class="carousel-indicators">
+        <span class="indicator active" onclick="goToSlide(0)"></span>
+        <span class="indicator" onclick="goToSlide(1)"></span>
+        <span class="indicator" onclick="goToSlide(2)"></span>
+        <span class="indicator" onclick="goToSlide(3)"></span>
+        <span class="indicator" onclick="goToSlide(4)"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Showcase Page -->
+  <div id="showcase" class="page-section">
+    <h1 style="text-align: center; color: #bb86fc; margin-bottom: 40px;">Interactive Showcase</h1>
+
+    <div class="showcase-section">
+      <h2>🎨 Table Styler</h2>
+      <p style="text-align: center; color: #b0b0b0; margin-bottom: 20px;">Customize the table appearance with interactive controls</p>
+
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Planet</th>
+            <th>Distance (AU)</th>
+            <th>Moons</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mercury</td>
+            <td>0.39</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Venus</td>
+            <td>0.72</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>Earth</td>
+            <td>1.00</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="controls">
+        <div class="control-group">
+          <label>Change Table Width</label>
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="changeWidth('200px', this)">200px</button>
+            <button class="tab-button" onclick="changeWidth('500px', this)">500px</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Change Border & Spacing</label>
+          <div class="tab-buttons">
+            <button class="tab-button active" onclick="changeBorder('1px', this)">1px</button>
+            <button class="tab-button" onclick="changeBorder('10px', this)">10px</button>
+            <button class="tab-button" onclick="changeBorder('20px', this)">20px</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Change Table Color</label>
+          <div class="tab-buttons">
+            <button class="tab-button" onclick="changeColor('#bbdefb', this)">Blue</button>
+            <button class="tab-button" onclick="changeColor('#e1bee7', this)">Purple</button>
+            <button class="tab-button" onclick="changeColor('#c8e6c9', this)">Green</button>
+            <button class="tab-button" onclick="changeColor('#ffccbc', this)">Orange</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="resetTable()">🔄 Reset to Original</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Page -->
+  <div id="contact" class="page-section">
+    <div class="hero">
+      <h1>Get in Touch</h1>
+      <p>Let's explore the cosmos together!</p>
+      <div style="margin-top: 40px;">
+        <p style="font-size: 20px; margin: 10px 0;">📧 mike@dreamspace.com</p>
+        <p style="font-size: 20px; margin: 10px 0;">🌐 www.dreamspace.com</p>
+        <p style="font-size: 20px; margin: 10px 0;">🚀 Follow me on social media</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+</footer>
+
+<script>
+  // Page Navigation
+  function showPage(pageName) {
+    const sections = document.querySelectorAll('.page-section');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById(pageName).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Gallery Carousel
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const indicators = document.querySelectorAll('.indicator');
+
+  function showSlide(n) {
+    if (n >= slides.length) currentSlide = 0;
+    if (n < 0) currentSlide = slides.length - 1;
+    
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(indicator => indicator.classList.remove('active'));
+    
+    slides[currentSlide].classList.add('active');
+    indicators[currentSlide].classList.add('active');
+  }
+
+  function changeSlide(direction) {
+    currentSlide += direction;
+    showSlide(currentSlide);
+  }
+
+  function goToSlide(n) {
+    currentSlide = n;
+    showSlide(currentSlide);
+  }
+
+  // Auto-play carousel
+  setInterval(() => {
+    changeSlide(1);
+  }, 5000);
+
+  // Table Styler Functions
+  const originalTableStyles = {
+    width: '300px',
+    borderSpacing: '5px',
+    backgroundColor: 'white'
+  };
+
+  function changeWidth(width, button) {
+    const table = document.getElementById('dataTable');
+    table.style.width = width;
+    
+    const buttons = button.parentElement.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  }
+
+  function changeBorder(size, button) {
+    const table = document.getElementById('dataTable');
+    table.style.borderSpacing = size;
+    
+    const buttons = button.parentElement.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  }
+
+  function changeColor(color, button) {
+    const table = document.getElementById('dataTable');
+    const cells = table.getElementsByTagName('td');
+    for (let cell of cells) {
+      cell.style.backgroundColor = color;
+    }
+    
+    const buttons = button.parentElement.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  }
+
+  function resetTable() {
+    const table = document.getElementById('dataTable');
+    const cells = table.getElementsByTagName('td');
+    table.style.width = originalTableStyles.width;
+    table.style.borderSpacing = originalTableStyles.borderSpacing;
+    for (let cell of cells) {
+      cell.style.backgroundColor = '#f5f5f5';
+    }
+    
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.control-group')[0].querySelector('.tab-button').classList.add('active');
+    document.querySelectorAll('.control-group')[1].querySelector('.tab-button').classList.add('active');
+  }
+
+  // Canvas Creative Challenge
+  window.addEventListener('load', function() {
+    const canvas = document.getElementById('spaceCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#0a0e27');
+    gradient.addColorStop(0.5, '#1a1a3e');
+    gradient.addColorStop(1, '#2d1b4e');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.beginPath();
+    ctx.arc(650, 100, 60, 0, Math.PI * 2);
+    ctx.fillStyle = '#f5f5dc';
+    ctx.shadowBlur = 30;
+    ctx.shadowColor = '#f5f5dc';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#1a1a2e';
+    ctx.beginPath();
+    ctx.moveTo(0, 400);
+    ctx.lineTo(200, 200);
+    ctx.lineTo(400, 400);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(300, 400);
+    ctx.lineTo(500, 150);
+    ctx.lineTo(700, 400);
+    ctx.fill();
+
+    ctx.fillStyle = 'white';
+    for (let i = 0; i < 50; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * (canvas.height * 0.6);
+      const radius = Math.random() * 2;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.font = 'bold 32px Arial';
+    ctx.fillStyle = '#bb86fc';
+    ctx.textAlign = 'center';
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#bb86fc';
+    ctx.fillText('Moonlight Galaxy', canvas.width / 2, 50);
+    ctx.shadowBlur = 0;
+  });
+</script>
+</body>
+</html>
